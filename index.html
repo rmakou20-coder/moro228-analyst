@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MORO228 Analyst</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b0d12;color:white;font-family:Arial,sans-serif}
+header{background:#171b24;padding:24px 12px;text-align:center;border-bottom:3px solid #e53935}
+h1{margin:0;font-size:30px}
+h1 span{color:#ef3939}
+header p{color:#ccc}
+main{max-width:900px;margin:auto;padding:16px}
+.panel,.match{background:#171c26;border:1px solid #343b49;border-radius:14px;padding:16px;margin-bottom:16px}
+button{background:#e53935;color:white;border:0;border-radius:8px;padding:12px;cursor:pointer;font-weight:bold}
+select{background:#252c38;color:white;padding:10px;border-radius:8px}
+.match h3{text-align:center}
+.teams{display:flex;justify-content:space-around;align-items:center;text-align:center;gap:8px;font-weight:bold}
+.vs{color:#ff5555}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.item{background:#252c38;padding:12px;border-radius:8px}
+.item strong{display:block;color:#6ee7a0;margin-top:6px}
+.small{font-size:12px;color:#b8c0ce;line-height:1.5}
+.tag{color:#8fbcff;font-size:13px}
+footer{text-align:center;color:#aaa;padding:20px}
+@media(max-width:480px){h1{font-size:24px}.grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header>
+<h1>MORO<span>228</span> ANALYST</h1>
+<p>Analyse automatique des matchs de football</p>
+</header>
+<main>
+<section class="panel">
+<h2>⚽ Centre d'analyse</h2>
+<p>Choisis une compétition et consulte les analyses disponibles.</p>
+<select id="filtre" onchange="afficher()">
+<option value="Tous">Toutes les compétitions</option>
+<option value="Ligue des champions">Ligue des champions</option>
+<option value="Championnat">Championnat</option>
+</select>
+<button onclick="afficher()">Actualiser</button>
+<p id="statut" class="small">Mode démonstration : les exemples ne sont pas des matchs réels.</p>
+</section>
+<div id="matchs"></div>
+<p class="small">Les pronostics sont des estimations, jamais des garanties. Les données ci-dessous sont fictives. Pour obtenir les vrais matchs automatiquement, une API de football devra être connectée.</p>
+</main>
+<footer>MORO228 Analyst © 2026</footer>
+<script>
+const donnees=[
+{ligue:"Ligue des champions",a:"Équipe A",b:"Équipe B",p:"1: 45% | N: 28% | 2: 27%",d:"1X : 73%",g:"Plus de 1,5 : 72%",s:"1 - 0"},
+{ligue:"Championnat",a:"Équipe C",b:"Équipe D",p:"1: 36% | N: 31% | 2: 33%",d:"X2 : 64%",g:"Plus de 2,5 : 46%",s:"1 - 1"}
+];
+function afficher(){
+const f=document.getElementById("filtre").value;
+const liste=donnees.filter(m=>f==="Tous"||m.ligue===f);
+document.getElementById("matchs").innerHTML=liste.map(m=>`
+<article class="match">
+<div class="tag">${m.ligue} · Exemple fictif</div>
+<h3>${m.a} <span class="vs">VS</span> ${m.b}</h3>
+<div class="grid">
+<div class="item">Résultat 1 / N / 2<strong>${m.p}</strong></div>
+<div class="item">Double chance<strong>${m.d}</strong></div>
+<div class="item">Buts<strong>${m.g}</strong></div>
+<div class="item">Score exact indicatif<strong>${m.s}</strong></div>
+</div>
+</article>`).join("");
+document.getElementById("statut").textContent="Affichage actualisé. Exemples fictifs uniquement.";
+}
+afficher();
+</script>
+</body>
+</html>
