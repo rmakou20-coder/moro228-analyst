@@ -1,75 +1,183 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MORO228 Analyst</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#0b0d12;color:white;font-family:Arial,sans-serif}
-header{background:#171b24;padding:24px 12px;text-align:center;border-bottom:3px solid #e53935}
-h1{margin:0;font-size:30px}
-h1 span{color:#ef3939}
-header p{color:#ccc}
-main{max-width:900px;margin:auto;padding:16px}
-.panel,.match{background:#171c26;border:1px solid #343b49;border-radius:14px;padding:16px;margin-bottom:16px}
-button{background:#e53935;color:white;border:0;border-radius:8px;padding:12px;cursor:pointer;font-weight:bold}
-select{background:#252c38;color:white;padding:10px;border-radius:8px}
-.match h3{text-align:center}
-.teams{display:flex;justify-content:space-around;align-items:center;text-align:center;gap:8px;font-weight:bold}
-.vs{color:#ff5555}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
-.item{background:#252c38;padding:12px;border-radius:8px}
-.item strong{display:block;color:#6ee7a0;margin-top:6px}
-.small{font-size:12px;color:#b8c0ce;line-height:1.5}
-.tag{color:#8fbcff;font-size:13px}
-footer{text-align:center;color:#aaa;padding:20px}
-@media(max-width:480px){h1{font-size:24px}.grid{grid-template-columns:1fr 1fr}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0d12">
+  <meta name="description" content="MORO228 ANALYST — matchs de football et statistiques en direct.">
+  <title>MORO228 ANALYST</title>
+  <style>
+    :root { color-scheme: dark; --bg:#0b0d12; --panel:#171c26; --line:#343b49; --accent:#ef594f; --muted:#b8c0ce; --blue:#263b59; }
+    * { box-sizing:border-box }
+    body { margin:0; background:var(--bg); color:#fff; font:16px/1.5 Arial, sans-serif }
+    header { background:#171b24; padding:24px 16px; text-align:center; border-bottom:3px solid var(--accent) }
+    h1 { margin:0; font-size:clamp(25px,4vw,36px); letter-spacing:.3px }
+    h1 span { color:var(--accent) }
+    header p { color:#ccd2dd; margin:8px 0 0 }
+    main { max-width:1100px; margin:auto; padding:16px }
+    .panel { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:16px; margin-bottom:16px }
+    .controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center }
+    select, input, button { border-radius:8px; padding:11px 12px; border:1px solid #4b5568; font:inherit }
+    select, input { background:#202634; color:white; max-width:100% }
+    button { background:var(--accent); color:white; border:0; cursor:pointer; font-weight:bold }
+    button:disabled { opacity:.6; cursor:wait }
+    .muted { color:var(--muted) }
+    .status { margin-top:10px; color:#cbd5e1; overflow-wrap:anywhere }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); gap:12px }
+    .match { background:#141a24; border:1px solid var(--line); border-radius:12px; padding:14px }
+    .league { color:#9ecbff; font-size:13px; margin-bottom:8px }
+    .teams { display:grid; grid-template-columns:1fr auto 1fr; gap:8px; align-items:center; font-weight:bold; text-align:center }
+    .team { overflow-wrap:anywhere }
+    .vs { color:var(--accent) }
+    .matchmeta { color:var(--muted); font-size:13px; margin-top:10px; text-align:center }
+    .score { text-align:center; font-size:21px; margin-top:8px; font-weight:bold }
+    .tag { display:inline-block; background:#263247; border-radius:20px; padding:3px 9px; font-size:12px; margin-top:8px }
+    .empty { padding:24px; border:1px dashed #4b5568; border-radius:12px; text-align:center; color:var(--muted) }
+    .small { font-size:12px; color:var(--muted) }
+    footer { text-align:center; padding:20px; color:var(--muted); font-size:12px }
+    details summary { cursor:pointer; font-weight:bold }
+    .warning { color:#ffd28a }
+  </style>
 </head>
 <body>
 <header>
-<h1>MORO<span>228</span> ANALYST</h1>
-<p>Analyse automatique des matchs de football</p>
+  <h1>MORO<span>228</span> ANALYST</h1>
+  <p>Analyse automatique des matchs de football</p>
 </header>
 <main>
-<section class="panel">
-<h2>⚽ Centre d'analyse</h2>
-<p>Choisis une compétition et consulte les analyses disponibles.</p>
-<select id="filtre" onchange="afficher()">
-<option value="Tous">Toutes les compétitions</option>
-<option value="Ligue des champions">Ligue des champions</option>
-<option value="Championnat">Championnat</option>
-</select>
-<button onclick="afficher()">Actualiser</button>
-<p id="statut" class="small">Mode démonstration : les exemples ne sont pas des matchs réels.</p>
-</section>
-<div id="matchs"></div>
-<p class="small">Les pronostics sont des estimations, jamais des garanties. Les données ci-dessous sont fictives. Pour obtenir les vrais matchs automatiquement, une API de football devra être connectée.</p>
+  <section class="panel">
+    <h2>⚽ Centre des matchs</h2>
+    <p class="muted">Choisis une date et une compétition pour afficher les matchs fournis par API-Football.</p>
+    <div class="controls">
+      <label for="date">Date</label>
+      <input id="date" type="date">
+      <label for="league">Compétition</label>
+      <select id="league">
+        <option value="">Toutes les compétitions disponibles</option>
+        <option value="2">Ligue des champions UEFA</option>
+        <option value="39">Premier League</option>
+        <option value="140">La Liga</option>
+        <option value="135">Serie A</option>
+        <option value="78">Bundesliga</option>
+        <option value="61">Ligue 1</option>
+        <option value="253">MLS</option>
+      </select>
+      <button id="loadBtn">Afficher les matchs</button>
+      <button id="todayBtn" type="button">Aujourd'hui</button>
+    </div>
+    <div id="status" class="status" role="status">Préparation…</div>
+    <p class="small warning">Les matchs et statistiques dépendent de la couverture et des limites de votre compte API-Football. Les probabilités de pari ne sont pas garanties.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Matchs</h2>
+    <div id="matches" class="grid">
+      <div class="empty">Les matchs apparaîtront ici après la connexion de l'API.</div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <details>
+      <summary>Paramètres de connexion</summary>
+      <p class="muted">URL du service intermédiaire (Worker). Colle ici l'adresse de ton Worker Cloudflare après l'avoir déployé. Ne colle jamais ta clé API-Football dans ce champ ni dans ce fichier.</p>
+      <div class="controls">
+        <input id="apiBase" type="url" placeholder="https://ton-worker.workers.dev" style="flex:1;min-width:260px">
+        <button id="saveConfig" type="button">Enregistrer l'adresse</button>
+      </div>
+      <p class="small">L'adresse est conservée dans ce navigateur seulement. Elle n'est pas envoyée à MORO228.</p>
+    </details>
+  </section>
+
+  <section class="panel">
+    <h2>À propos</h2>
+    <p>MORO228 ANALYST affiche les rencontres retournées par le fournisseur de données connecté. Les heures sont affichées selon le fuseau horaire local du navigateur.</p>
+    <p class="small">Ce site fournit des informations sportives, pas des conseils financiers ni une garantie de gain. Vérifie toujours les données et respecte les lois locales.</p>
+  </section>
 </main>
-<footer>MORO228 Analyst © 2026</footer>
+<footer>© <span id="year"></span> MORO228 ANALYST</footer>
 <script>
-const donnees=[
-{ligue:"Ligue des champions",a:"Équipe A",b:"Équipe B",p:"1: 45% | N: 28% | 2: 27%",d:"1X : 73%",g:"Plus de 1,5 : 72%",s:"1 - 0"},
-{ligue:"Championnat",a:"Équipe C",b:"Équipe D",p:"1: 36% | N: 31% | 2: 33%",d:"X2 : 64%",g:"Plus de 2,5 : 46%",s:"1 - 1"}
-];
-function afficher(){
-const f=document.getElementById("filtre").value;
-const liste=donnees.filter(m=>f==="Tous"||m.ligue===f);
-document.getElementById("matchs").innerHTML=liste.map(m=>`
-<article class="match">
-<div class="tag">${m.ligue} · Exemple fictif</div>
-<h3>${m.a} <span class="vs">VS</span> ${m.b}</h3>
-<div class="grid">
-<div class="item">Résultat 1 / N / 2<strong>${m.p}</strong></div>
-<div class="item">Double chance<strong>${m.d}</strong></div>
-<div class="item">Buts<strong>${m.g}</strong></div>
-<div class="item">Score exact indicatif<strong>${m.s}</strong></div>
-</div>
-</article>`).join("");
-document.getElementById("statut").textContent="Affichage actualisé. Exemples fictifs uniquement.";
-}
-afficher();
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const dateInput = $('date'), leagueInput = $('league'), matches = $('matches'), status = $('status');
+  const today = new Date();
+  const localDate = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  dateInput.value = localDate;
+  $('year').textContent = today.getFullYear();
+
+  // Configure the URL of your Cloudflare Worker in "Paramètres de connexion".
+  const savedBase = localStorage.getItem('moro228_worker_url') || '';
+  $('apiBase').value = savedBase;
+
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  }
+  function formatDate(iso) {
+    if (!iso) return 'Heure non disponible';
+    const d = new Date(iso);
+    return Number.isNaN(d.getTime()) ? iso : d.toLocaleString('fr-FR', {dateStyle:'medium', timeStyle:'short'});
+  }
+  function renderFixtures(items) {
+    if (!items.length) {
+      matches.innerHTML = '<div class="empty">Aucun match retourné pour cette date/compétition. Essaie une autre date ou vérifie la couverture de ton abonnement API.</div>';
+      return;
+    }
+    matches.innerHTML = items.map(item => {
+      const fixture = item.fixture || {};
+      const league = item.league || {};
+      const teams = item.teams || {};
+      const goals = item.goals || {};
+      const home = teams.home || {}, away = teams.away || {};
+      const statusShort = fixture.status?.short || '';
+      const isFinishedOrLive = (goals.home !== null && goals.home !== undefined) || (goals.away !== null && goals.away !== undefined);
+      const score = isFinishedOrLive ? `<div class="score">${escapeHtml(goals.home ?? '-')} - ${escapeHtml(goals.away ?? '-')}</div>` : '';
+      return `<article class="match">
+        <div class="league">${escapeHtml(league.name || 'Compétition inconnue')} ${league.round ? '· ' + escapeHtml(league.round) : ''}</div>
+        <div class="teams"><div class="team">${escapeHtml(home.name || 'Équipe domicile')}</div><div class="vs">VS</div><div class="team">${escapeHtml(away.name || 'Équipe extérieure')}</div></div>
+        ${score}
+        <div class="matchmeta">${escapeHtml(formatDate(fixture.date))}</div>
+        <div style="text-align:center"><span class="tag">${escapeHtml(fixture.status?.long || statusShort || 'Programmé')}</span></div>
+      </article>`;
+    }).join('');
+  }
+  async function loadMatches() {
+    const base = $('apiBase').value.trim().replace(/\/+$/, '');
+    if (!base) {
+      status.textContent = 'Il manque l’adresse de ton Worker sécurisé. Déploie worker.js (instructions dans README.txt), puis colle son adresse dans « Paramètres de connexion ».';
+      matches.innerHTML = '<div class="empty">Connexion à configurer — aucun faux match ne sera affiché.</div>';
+      return;
+    }
+    const date = dateInput.value;
+    if (!date) { status.textContent = 'Choisis une date.'; return; }
+    $('loadBtn').disabled = true;
+    status.textContent = 'Chargement des matchs…';
+    matches.innerHTML = '<div class="empty">Recherche en cours…</div>';
+    try {
+      const params = new URLSearchParams({date});
+      if (leagueInput.value) params.set('league', leagueInput.value);
+      const response = await fetch(`${base}/fixtures?${params.toString()}`);
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || `Erreur HTTP ${response.status}`);
+      const list = Array.isArray(data.response) ? data.response : (Array.isArray(data.fixtures) ? data.fixtures : []);
+      renderFixtures(list);
+      status.textContent = `${list.length} match(s) reçu(s) pour le ${date}.`;
+    } catch (err) {
+      status.textContent = `Connexion impossible : ${err.message}. Vérifie l’adresse du Worker et ses paramètres.`;
+      matches.innerHTML = '<div class="empty">Les matchs ne peuvent pas être chargés. Vérifie la connexion au service.</div>';
+    } finally { $('loadBtn').disabled = false; }
+  }
+  $('loadBtn').addEventListener('click', loadMatches);
+  $('todayBtn').addEventListener('click', () => { dateInput.value = localDate; loadMatches(); });
+  $('saveConfig').addEventListener('click', () => {
+    const value = $('apiBase').value.trim().replace(/\/+$/, '');
+    if (value && !/^https:\/\/.+/i.test(value)) {
+      status.textContent = 'L’adresse doit commencer par https://';
+      return;
+    }
+    localStorage.setItem('moro228_worker_url', value);
+    status.textContent = value ? 'Adresse du Worker enregistrée dans ce navigateur.' : 'Adresse effacée.';
+  });
+  status.textContent = 'Prêt. Configure l’adresse du Worker dans « Paramètres de connexion » pour charger les vrais matchs.';
+})();
 </script>
 </body>
 </html>
