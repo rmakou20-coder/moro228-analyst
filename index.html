@@ -1,469 +1,109 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#090d17">
-<title>MORO228 Analyst — Analyse football</title>
+<meta name="theme-color" content="#07130f">
+<meta name="description" content="MORO228 ANALYST — centre d'analyse des matchs de football.">
+<title>MORO228 ANALYST</title>
 <style>
-:root {
-  color-scheme: dark;
-  --bg: #090d17;
-  --panel: #141d2d;
-  --panel2: #0e1624;
-  --line: #2b3a52;
-  --text: #f3f6ff;
-  --muted: #aab8ce;
-  --green: #29d39a;
-  --red: #ff625d;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font: 16px/1.5 system-ui, sans-serif;
-}
-button, input { font: inherit; }
-button { cursor: pointer; border: 0; }
-header {
-  padding: 20px 16px 16px;
-  background: linear-gradient(145deg,#14283a,#0b111d);
-  border-bottom: 1px solid var(--line);
-}
-.wrap, .main { max-width: 1100px; margin: auto; }
-.brand { display:flex; align-items:center; gap:12px; }
-.logo {
-  width:46px; height:46px; border-radius:14px;
-  background:var(--green); color:#061b16;
-  display:grid; place-items:center; font-size:25px;
-  font-weight:900;
-}
-.brand h1 { font-size:21px; margin:0; }
-.brand p { margin:2px 0 0; color:var(--muted); font-size:13px; }
-.nav { display:flex; gap:8px; flex-wrap:wrap; margin-top:18px; }
-.nav button, .secondary {
-  background:#1c2a40; color:var(--text);
-  padding:11px 15px; border-radius:13px; font-weight:750;
-}
-.nav button.active { background:var(--green); color:#052018; }
-.main { padding:18px 14px 48px; }
-.hero {
-  padding:20px; border:1px solid var(--line);
-  border-radius:20px; background:var(--panel); margin-bottom:18px;
-}
-.hero h2 { font-size:25px; margin:0 0 5px; }
-.muted { color:var(--muted); }
-.tools { display:flex; gap:10px; flex-wrap:wrap; margin-top:15px; }
-.tools input {
-  min-width:0; flex:1; background:#080e19;
-  border:1px solid var(--line); border-radius:12px;
-  padding:12px; color:var(--text);
-}
-.primary {
-  background:var(--green); color:#062017;
-  font-weight:800; padding:12px 16px; border-radius:12px;
-}
-.section-title {
-  display:flex; align-items:center; justify-content:space-between;
-  gap:12px; margin:22px 0 12px;
-}
-.section-title h2 { font-size:19px; margin:0; }
-.grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));
-  gap:13px;
-}
-.match {
-  background:var(--panel); border:1px solid var(--line);
-  border-radius:18px; padding:16px;
-}
-.match:hover { border-color:var(--green); }
-.league { font-size:12px; color:#9dc8ff; font-weight:750; }
-.teams {
-  display:grid; grid-template-columns:1fr auto 1fr;
-  align-items:center; gap:8px; margin:17px 0; text-align:center;
-}
-.team { font-weight:800; overflow-wrap:anywhere; }
-.vs { color:var(--red); font-weight:900; }
-.score { font-size:22px; font-weight:900; margin-top:5px; }
-.meta {
-  display:flex; justify-content:space-between; gap:8px;
-  align-items:center; color:var(--muted); font-size:13px; flex-wrap:wrap;
-}
-.status { background:#26364e; border-radius:20px; padding:4px 9px; }
-.card-actions { display:flex; gap:8px; margin-top:14px; }
-.card-actions button {
-  flex:1; padding:10px; border-radius:11px; font-weight:800;
-}
-.analyze { background:var(--red); color:white; }
-.favorite { background:#26364e; color:white; }
-.empty {
-  padding:25px; border:1px dashed var(--line);
-  border-radius:16px; text-align:center; color:var(--muted);
-}
-.notice {
-  border:1px solid #665b2e; background:#2b2717; color:#f4e3a4;
-  padding:12px 14px; border-radius:13px; font-size:13px; margin-top:15px;
-}
-.hidden { display:none !important; }
-dialog {
-  border:1px solid var(--line); padding:0; background:var(--panel);
-  color:var(--text); width:min(720px,calc(100% - 24px));
-  max-height:88vh; border-radius:20px;
-}
-dialog::backdrop { background:#000b; }
-.modal-head {
-  padding:18px 20px; border-bottom:1px solid var(--line);
-  display:flex; justify-content:space-between; gap:12px; align-items:flex-start;
-}
-.modal-head h2 { margin:0; font-size:22px; }
-.close {
-  background:#2a3950; color:white;
-  border-radius:10px; padding:9px 12px; font-weight:800;
-}
-.modal-body { padding:18px 20px; overflow:auto; }
-.analysis-score {
-  text-align:center; padding:15px; background:var(--panel2);
-  border-radius:15px; margin-bottom:16px;
-}
-.analysis-score .big { font-size:30px; font-weight:900; }
-.stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-.stat {
-  padding:13px; background:var(--panel2);
-  border:1px solid var(--line); border-radius:13px;
-}
-.stat strong { display:block; font-size:20px; }
-.modal-body h3 { margin:20px 0 8px; }
-.pill {
-  display:inline-block; padding:5px 9px; border-radius:20px;
-  background:#26364e; color:#d9e7ff; font-size:12px;
-}
-.footer {
-  border-top:1px solid var(--line); padding:18px;
-  text-align:center; color:var(--muted); font-size:12px;
-}
-@media(max-width:480px) {
-  .brand h1 { font-size:18px; }
-  .hero h2 { font-size:22px; }
-  .nav button { flex:1; }
-  .modal-head h2 { font-size:19px; }
-  .stats { grid-template-columns:1fr 1fr; }
-}
+:root{color-scheme:dark;--bg:#06100d;--panel:#101d18;--panel2:#14251e;--line:#294538;--green:#35e18a;--green2:#a4ffcf;--muted:#aabdb3;--gold:#f5c86a}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#1b593e 0%,#0a2118 38%,var(--bg) 76%);color:#f4fff8;font:15px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select{font:inherit}button{cursor:pointer}.topbar{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px max(16px,calc((100% - 1120px)/2));background:#07130fee;backdrop-filter:blur(14px);border-bottom:1px solid #294538}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}.brandmark{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(145deg,#6affad,#129654);color:#04140b;font-size:22px;box-shadow:0 0 24px #35e18a30}.brandname{font-weight:950;letter-spacing:.5px;font-size:18px;line-height:1.1}.brandname span{color:var(--green)}.tagline{font-size:11px;color:#a7c4b4}.livepill{font-size:11px;color:var(--green2);border:1px solid #267b50;border-radius:999px;padding:6px 9px;white-space:nowrap}
+main{max-width:1120px;margin:auto;padding:16px}.hero{position:relative;overflow:hidden;border:1px solid #2a6448;border-radius:24px;padding:28px 20px;min-height:250px;background:linear-gradient(105deg,#07160ff5 0%,#0b251bd9 50%,#0a2118aa 100%),repeating-linear-gradient(120deg,transparent 0 20px,#ffffff05 21px 22px),radial-gradient(ellipse at 85% 25%,#2de08055,transparent 42%),linear-gradient(0deg,#0a2718,#164c32);box-shadow:0 20px 70px #0005}
+.hero:before{content:"";position:absolute;right:-30px;bottom:-105px;width:310px;height:310px;border:2px solid #55ff9c2b;border-radius:50%;box-shadow:0 0 0 22px #55ff9c0d,0 0 0 48px #55ff9c09}.hero:after{content:"⚽";position:absolute;right:28px;bottom:20px;font-size:clamp(90px,20vw,170px);opacity:.12;filter:grayscale(1);transform:rotate(-18deg)}.hero-content{position:relative;z-index:1;max-width:650px}.eyebrow{color:var(--green2);font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase}.hero h1{font-size:clamp(30px,7vw,54px);line-height:1.04;margin:12px 0}.hero h1 span{color:var(--green)}.hero p{color:#c6dbcf;max-width:540px;margin:0 0 20px}.hero-actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:1px solid #3d6d54;background:#152d21;color:#eafff1;padding:11px 15px;border-radius:12px;font-weight:800}.btn.primary{background:linear-gradient(135deg,#50f29b,#21b76a);color:#052012;border:0;box-shadow:0 8px 24px #35e18a22}.sectionhead{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:24px 2px 12px}.sectionhead h2{font-size:20px;margin:0}.sub{color:var(--muted);font-size:12px}.panel{background:linear-gradient(145deg,#12221b,#0e1914);border:1px solid var(--line);border-radius:18px;padding:15px;margin-bottom:14px;box-shadow:0 12px 28px #0002}.controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}.field input,.field select,.settingsinput{width:100%;background:#07140e;border:1px solid #355442;color:white;border-radius:10px;padding:11px;min-width:0}.controlbuttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.controlbuttons button{flex:1}.status{font-size:13px;color:var(--green2);margin-top:12px;overflow-wrap:anywhere}.matches{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,310px),1fr));gap:12px}.match{width:100%;text-align:left;background:linear-gradient(150deg,#14251d,#0c1712);border:1px solid #294538;border-radius:17px;padding:14px;color:inherit;transition:transform .15s,border-color .15s;min-width:0}.match:hover,.match:focus-visible{border-color:var(--green);transform:translateY(-2px);outline:none}.league{display:flex;align-items:center;gap:7px;color:#b9e6cd;font-size:12px;margin-bottom:14px}.league img{width:20px;height:20px;object-fit:contain}.teams{display:grid;grid-template-columns:minmax(0,1fr) 36px minmax(0,1fr);gap:6px;align-items:center}.team{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;font-weight:800;font-size:13px;min-width:0}.team img{width:48px;height:48px;object-fit:contain;filter:drop-shadow(0 4px 7px #0006)}.teamname{overflow-wrap:anywhere}.vs{color:var(--green);font-weight:900;text-align:center;font-size:12px}.score{text-align:center;font-weight:950;font-size:24px;color:white;margin-top:10px}.matchbottom{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:14px;padding-top:10px;border-top:1px solid #ffffff12;color:var(--muted);font-size:11px}.badge{display:inline-flex;align-items:center;gap:5px;border-radius:999px;background:#173d2a;color:#a7ffd0;padding:4px 8px;font-size:10px;font-weight:800}.empty{border:1px dashed #355442;border-radius:15px;padding:24px;text-align:center;color:var(--muted);grid-column:1/-1}.statsrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.statbox{padding:12px;border:1px solid #294538;border-radius:14px;background:#0b1811}.statbox strong{display:block;color:var(--green);font-size:20px}.statbox span{font-size:11px;color:var(--muted)}.small{font-size:12px;color:var(--muted)}details summary{cursor:pointer;font-weight:800}.settingsinput{margin:8px 0}.footer{text-align:center;padding:24px 12px;color:#829b8b;font-size:11px}
+.modal{position:fixed;inset:0;z-index:20;display:none;align-items:flex-end;justify-content:center;background:#000b;padding:0}.modal.open{display:flex}.modalbox{width:min(100%,760px);max-height:92dvh;overflow:auto;background:#0b1711;border:1px solid #35694b;border-radius:24px 24px 0 0;padding:18px;box-shadow:0 -20px 80px #0008}.modalhead{display:flex;justify-content:space-between;align-items:center;gap:10px}.modalhead h2{font-size:20px;margin:0}.close{width:40px;height:40px;border-radius:12px;background:#1c3326;border:1px solid #355442;color:white;font-size:23px}.detailteams{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}.detailteam{text-align:center;padding:15px 8px;background:#11251a;border-radius:16px;border:1px solid #294538}.detailteam img{width:66px;height:66px;object-fit:contain}.detailteam strong{display:block;margin-top:8px;overflow-wrap:anywhere}.tabs{display:flex;gap:7px;overflow:auto;margin:12px 0}.tab{white-space:nowrap;border:1px solid #355442;background:#102219;color:#dff8e8;border-radius:999px;padding:9px 13px}.tab.active{background:var(--green);color:#04160b;border-color:var(--green);font-weight:900}.tabcontent{background:#102017;border:1px solid #294538;border-radius:14px;padding:14px;min-height:120px}.detailgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.detailitem{background:#07140e;padding:10px;border-radius:10px}.detailitem span{display:block;font-size:11px;color:var(--muted)}.detailitem strong{font-size:13px;overflow-wrap:anywhere}.notice{border-left:3px solid var(--gold);padding:9px 11px;background:#302819;color:#ffe5a6;border-radius:0 9px 9px 0;font-size:12px}
+@media(min-width:700px){main{padding:22px}.hero{padding:42px}.modal{align-items:center;padding:18px}.modalbox{border-radius:24px}.controls{grid-template-columns:repeat(4,minmax(0,1fr))}}@media(max-width:390px){.brandname{font-size:15px}.tagline{font-size:10px}.livepill{font-size:10px}.controls{grid-template-columns:1fr}.statsrow{grid-template-columns:1fr 1fr}.hero{padding:23px 16px}}
 </style>
 </head>
 <body>
-<header>
-  <div class="wrap">
-    <div class="brand">
-      <div class="logo">M</div>
-      <div>
-        <h1>MORO228 Analyst</h1>
-        <p>Résultats, statistiques et analyse football</p>
-      </div>
-    </div>
-    <nav class="nav" aria-label="Navigation principale">
-      <button class="active" data-view="home">⌂ Accueil</button>
-      <button data-view="matches">⚽ Sports</button>
-      <button data-view="analysis">📊 Analyses</button>
-      <button data-view="favorites">★ Favoris <span id="favCount">0</span></button>
-      <button data-view="about">ℹ À propos</button>
-    </nav>
-  </div>
-</header>
-
-<main class="main">
-  <section class="hero" id="intro">
-    <h2 id="pageTitle">Bienvenue sur MORO228 Analyst</h2>
-    <div class="muted" id="pageDescription">
-      Consulte les matchs, ouvre une fiche et découvre les informations disponibles.
-    </div>
-    <div class="tools" id="searchTools">
-      <input id="search" type="search"
-        placeholder="Rechercher une équipe ou une compétition…"
-        aria-label="Rechercher un match">
-      <button class="primary" id="searchBtn">Rechercher</button>
-    </div>
-    <div class="notice">
-      Les matchs ci-dessous sont des exemples de démonstration.
-      Les scores et statistiques ne sont pas des données en direct.
-      Remplace-les par une source fiable avant publication.
+<div class="topbar">
+  <div class="brand"><div class="brandmark">⚽</div><div><div class="brandname">MORO<span>228</span> ANALYST</div><div class="tagline">FOOTBALL • DONNÉES • ANALYSE</div></div></div>
+  <div class="livepill">● CENTRE FOOT</div>
+</div>
+<main>
+  <section class="hero">
+    <div class="hero-content">
+      <div class="eyebrow">La passion du football, les données en plus</div>
+      <h1>Analyse les matchs.<br><span>Lis le jeu.</span></h1>
+      <p>Retrouve les rencontres, les logos des clubs, les scores et les informations disponibles pour chaque match.</p>
+      <div class="hero-actions"><button class="btn primary" id="heroLoad">⚽ Voir les matchs du jour</button><button class="btn" id="scrollMatches">Explorer les rencontres ↓</button></div>
     </div>
   </section>
-
-  <section id="matchSection">
-    <div class="section-title">
-      <h2 id="listTitle">Matchs de démonstration</h2>
-      <span class="muted" id="matchCount"></span>
+  <div class="sectionhead"><div><h2>Centre des matchs</h2><div class="sub">Choisis une date et une compétition</div></div><span class="badge">API FOOTBALL</span></div>
+  <section class="panel">
+    <div class="controls">
+      <div class="field"><label for="date">Date des matchs</label><input id="date" type="date"></div>
+      <div class="field"><label for="league">Compétition</label><select id="league">
+        <option value="">Toutes les compétitions</option><option value="2">Ligue des champions UEFA</option><option value="39">Premier League</option><option value="140">La Liga</option><option value="135">Serie A</option><option value="78">Bundesliga</option><option value="61">Ligue 1</option><option value="253">MLS</option>
+      </select></div>
     </div>
-    <div class="grid" id="matchList"></div>
+    <div class="controlbuttons"><button class="btn primary" id="loadBtn">Afficher les matchs</button><button class="btn" id="todayBtn">Aujourd'hui</button></div>
+    <div id="status" class="status" role="status">Configure le Worker pour charger les matchs.</div>
   </section>
-
-  <section id="aboutSection" class="hero hidden">
-    <h2>À propos du site</h2>
-    <p>
-      Cette version permet d'ouvrir chaque fiche de match, de consulter
-      les données de démonstration et d'ajouter des matchs aux favoris
-      sur cet appareil.
-    </p>
-    <p class="muted">
-      Pour obtenir des scores, historiques et statistiques réels, il faut
-      connecter une API sportive et vérifier ses conditions d'utilisation.
-      Cette page ne récupère pas automatiquement de données en direct.
-    </p>
+  <div class="sectionhead" id="matchesHeading"><div><h2>Les rencontres</h2><div class="sub">Appuie sur une carte pour ouvrir son analyse</div></div><span id="matchCount" class="badge">0 match</span></div>
+  <section id="matches" class="matches"><div class="empty">Les matchs apparaîtront ici après la connexion au service de données.</div></section>
+  <div class="sectionhead"><div><h2>À propos de la plateforme</h2><div class="sub">MORO228 ANALYST</div></div></div>
+  <section class="panel">
+    <div class="statsrow"><div class="statbox"><strong>⚽</strong><span>Rencontres</span></div><div class="statbox"><strong>📊</strong><span>Données disponibles</span></div><div class="statbox"><strong>🛡️</strong><span>Analyse prudente</span></div></div>
+    <p class="small">Les informations affichées dépendent des données retournées par le fournisseur et de ton abonnement API. Les statistiques détaillées peuvent ne pas être disponibles pour toutes les rencontres. Une analyse n'est jamais une garantie de résultat.</p>
+    <details><summary>Paramètres de connexion</summary><p class="small">Adresse de ton Worker Cloudflare. Ne mets jamais ta clé API dans ce champ.</p><input id="apiBase" class="settingsinput" type="url" placeholder="https://ton-worker.workers.dev"><button id="saveConfig" class="btn primary">Enregistrer l'adresse</button><div id="configStatus" class="small"></div></details>
   </section>
 </main>
+<div class="footer">© <span id="year"></span> MORO228 ANALYST • Football et données sportives</div>
 
-<footer class="footer">
-  MORO228 Analyst · Analyse informative du football
-</footer>
-
-<dialog id="matchDialog" aria-labelledby="dialogTitle">
-  <div class="modal-head">
-    <div>
-      <div class="league" id="dialogLeague"></div>
-      <h2 id="dialogTitle">Analyse du match</h2>
-    </div>
-    <button class="close" id="closeDialog">Fermer ✕</button>
+<div class="modal" id="detailModal" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+  <div class="modalbox">
+    <div class="modalhead"><div><div class="eyebrow">FICHE DU MATCH</div><h2 id="detailTitle">Détails de la rencontre</h2></div><button class="close" id="closeModal" aria-label="Fermer">×</button></div>
+    <div id="detailBody"></div>
+    <div class="tabs"><button class="tab active" data-tab="resume">Résumé</button><button class="tab" data-tab="analyse">Analyse rapide</button><button class="tab" data-tab="stats">Statistiques</button><button class="tab" data-tab="infos">Informations</button></div>
+    <div id="tabContent" class="tabcontent"></div>
+    <p class="small">Les données manquantes ne sont pas inventées. Vérifie les informations avant toute décision.</p>
   </div>
-  <div class="modal-body" id="dialogContent"></div>
-</dialog>
-
+</div>
 <script>
-"use strict";
-
-// Matchs fictifs de démonstration.
-// Remplace-les par des données vérifiées avant publication.
-const matches = [
-  {
-    id:"demo1",
-    league:"Ligue de démonstration",
-    home:"Livyi Bereh U19",
-    away:"SK Metalurh U19",
-    date:"21 oct. 2026 · 08:00",
-    status:"À venir",
-    score:"—",
-    formHome:"Non disponible",
-    formAway:"Non disponible",
-    note:"Aucun historique vérifié n'est fourni dans cette démonstration."
-  },
-  {
-    id:"demo2",
-    league:"J3 League · exemple",
-    home:"Parceiro Nagano",
-    away:"FC Ryukyu",
-    date:"21 oct. 2026 · 04:00",
-    status:"Exemple terminé",
-    score:"0 – 1",
-    formHome:"Donnée de démonstration",
-    formAway:"Donnée de démonstration",
-    note:"Le score illustratif affiché ici n'est pas vérifié par une source externe."
-  },
-  {
-    id:"demo3",
-    league:"Match amical · exemple",
-    home:"Équipe bleue",
-    away:"Équipe rouge",
-    date:"Horaire non confirmé",
-    status:"À venir",
-    score:"—",
-    formHome:"Non disponible",
-    formAway:"Non disponible",
-    note:"Ajoute les données officielles de ce match avant d'en tirer une conclusion."
-  }
-];
-
-const favorites = new Set();
-let currentView = "home";
-const $ = id => document.getElementById(id);
-
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, c => ({
-    "&":"&amp;", "<":"&lt;", ">":"&gt;",
-    '"':"&quot;", "'":"&#39;"
-  }[c]));
-}
-
-function visibleMatches() {
-  const q = $("search").value.trim().toLowerCase();
-  let list = matches.filter(m =>
-    !q || [m.home,m.away,m.league].some(v => v.toLowerCase().includes(q))
-  );
-
-  if (currentView === "favorites") {
-    list = list.filter(m => favorites.has(m.id));
-  }
-  return list;
-}
-
-function render() {
-  const list = visibleMatches();
-
-  $("matchList").innerHTML = list.length
-    ? list.map(m => `
-      <article class="match">
-        <div class="league">${escapeHTML(m.league)}</div>
-        <div class="teams">
-          <div class="team">${escapeHTML(m.home)}</div>
-          <div class="vs">VS</div>
-          <div class="team">${escapeHTML(m.away)}</div>
-        </div>
-        <div class="score" style="text-align:center">
-          ${escapeHTML(m.score)}
-        </div>
-        <div class="meta">
-          <span>${escapeHTML(m.date)}</span>
-          <span class="status">${escapeHTML(m.status)}</span>
-        </div>
-        <div class="card-actions">
-          <button class="analyze" data-open="${escapeHTML(m.id)}">
-            Voir l’analyse
-          </button>
-          <button class="favorite" data-fav="${escapeHTML(m.id)}">
-            ${favorites.has(m.id) ? "★ Favori" : "☆ Favoris"}
-          </button>
-        </div>
-      </article>
-    `).join("")
-    : `<div class="empty">Aucun match trouvé. Essaie un autre nom.</div>`;
-
-  $("matchCount").textContent = list.length + " match(s)";
-  $("favCount").textContent = favorites.size;
-  $("listTitle").textContent =
-    currentView === "favorites" ? "Tes matchs favoris" :
-    currentView === "analysis" ? "Fiches d’analyse" :
-    "Matchs de démonstration";
-
-  $("matchSection").classList.toggle("hidden", currentView === "about");
-  $("aboutSection").classList.toggle("hidden", currentView !== "about");
-  $("searchTools").classList.toggle("hidden", currentView === "about");
-}
-
-function openMatch(id) {
-  const m = matches.find(item => item.id === id);
-  if (!m) return;
-
-  $("dialogLeague").textContent = m.league;
-  $("dialogTitle").textContent = m.home + " — " + m.away;
-
-  $("dialogContent").innerHTML = `
-    <div class="analysis-score">
-      <div class="muted">${escapeHTML(m.date)}</div>
-      <div class="big">${escapeHTML(m.score)}</div>
-      <span class="pill">${escapeHTML(m.status)}</span>
-    </div>
-
-    <div class="stats">
-      <div class="stat">
-        <span class="muted">${escapeHTML(m.home)}</span>
-        <strong>${escapeHTML(m.formHome)}</strong>
-        <small>Forme récente</small>
-      </div>
-      <div class="stat">
-        <span class="muted">${escapeHTML(m.away)}</span>
-        <strong>${escapeHTML(m.formAway)}</strong>
-        <small>Forme récente</small>
-      </div>
-      <div class="stat">
-        <span class="muted">Historique</span>
-        <strong>Indisponible</strong>
-        <small>Pas de données vérifiées</small>
-      </div>
-      <div class="stat">
-        <span class="muted">Confiance</span>
-        <strong>Non évaluée</strong>
-        <small>Informations insuffisantes</small>
-      </div>
-    </div>
-
-    <h3>Résumé de l’analyse</h3>
-    <p>${escapeHTML(m.note)}</p>
-
-    <h3>Informations à vérifier</h3>
-    <ul>
-      <li>Résultats récents confirmés des deux équipes.</li>
-      <li>Lieu, date et statut officiels de la rencontre.</li>
-      <li>Statistiques provenant d'une source fiable.</li>
-    </ul>
-
-    <p class="muted">
-      Cette fiche est informative. Aucune prédiction fiable ne peut
-      être calculée à partir de données manquantes ou fictives.
-    </p>
-  `;
-
-  if (typeof $("matchDialog").showModal === "function") {
-    $("matchDialog").showModal();
-  } else {
-    alert(m.home + " — " + m.away + "\n" + m.note);
-  }
-}
-
-document.addEventListener("click", event => {
-  const openButton = event.target.closest("[data-open]");
-  if (openButton) {
-    openMatch(openButton.dataset.open);
-    return;
-  }
-
-  const favButton = event.target.closest("[data-fav]");
-  if (favButton) {
-    const id = favButton.dataset.fav;
-    favorites.has(id) ? favorites.delete(id) : favorites.add(id);
-    render();
-    return;
-  }
-
-  const navButton = event.target.closest("[data-view]");
-  if (navButton) {
-    currentView = navButton.dataset.view;
-
-    document.querySelectorAll("[data-view]").forEach(button => {
-      button.classList.toggle("active", button === navButton);
-    });
-
-    const titles = {
-      home:"Bienvenue sur MORO228 Analyst",
-      matches:"Tous les matchs",
-      analysis:"Analyses des matchs",
-      favorites:"Tes favoris",
-      about:"À propos"
-    };
-
-    const descriptions = {
-      home:"Consulte les matchs, ouvre une fiche et découvre les informations disponibles.",
-      matches:"Sélectionne un match pour ouvrir sa fiche.",
-      analysis:"Consulte les fiches et les informations disponibles.",
-      favorites:"Retrouve ici les matchs enregistrés.",
-      about:"Fonctionnement et limites de cette démonstration."
-    };
-
-    $("pageTitle").textContent = titles[currentView];
-    $("pageDescription").textContent = descriptions[currentView];
-    render();
-  }
-});
-
-$("searchBtn").addEventListener("click", render);
-$("search").addEventListener("input", render);
-$("closeDialog").addEventListener("click", () => {
-  $("matchDialog").close();
-});
-
-$("matchDialog").addEventListener("click", event => {
-  if (event.target === $("matchDialog")) {
-    $("matchDialog").close();
-  }
-});
-
-document.addEventListener("keydown", event => {
-  if (event.key === "Escape" && $("matchDialog").open) {
-    $("matchDialog").close();
-  }
-});
-
-render();
-</script>
-</body>
-</html>
+(() => {
+ const $=id=>document.getElementById(id);
+ const dateInput=$('date'),leagueInput=$('league'),matches=$('matches'),status=$('status');
+ const now=new Date(), localDate=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+ dateInput.value=localDate;$('year').textContent=now.getFullYear();
+ $('apiBase').value=localStorage.getItem('moro228_worker_url')||'';
+ let currentFixtures=[], selectedFixture=null, currentTab='resume';
+ function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+ function safeLogo(url){return typeof url==='string' && /^https:\/\/(media\.api-sports\.io|.*api-sports\.io)\//i.test(url)?url:'';}
+ function logo(url,name){const src=safeLogo(url);return src?`<img src="${esc(src)}" alt="Logo ${esc(name||'équipe')}" loading="lazy" onerror="this.onerror=null;this.style.display='none';this.insertAdjacentHTML('afterend','<span aria-hidden=&quot;true&quot; style=&quot;font-size:30px&quot;>⚽</span>')">`:'<span aria-hidden="true" style="font-size:34px">⚽</span>';}
+ function formatDate(iso){if(!iso)return'Heure non disponible';const d=new Date(iso);return Number.isNaN(d.getTime())?iso:d.toLocaleString('fr-FR',{dateStyle:'medium',timeStyle:'short'});}
+ function matchStatus(f){return f.status?.long||f.status?.short||'Statut indisponible';}
+ function renderFixtures(items){
+   currentFixtures=items||[];$('matchCount').textContent=`${items.length} match${items.length===1?'':'s'}`;
+   if(!items.length){matches.innerHTML='<div class="empty">Aucun match retourné pour cette date/compétition. Essaie une autre date.</div>';return;}
+   matches.innerHTML=items.map((item,i)=>{
+     const f=item.fixture||{},l=item.league||{},t=item.teams||{},g=item.goals||{},h=t.home||{},a=t.away||{};
+     const score=(g.home!==null&&g.home!==undefined)||(g.away!==null&&g.away!==undefined)?`<div class="score">${esc(g.home??'-')} – ${esc(g.away??'-')}</div>`:'';
+     return `<button class="match" type="button" data-fixture-index="${i}" aria-label="Ouvrir l'analyse de ${esc(h.name||'équipe domicile')} contre ${esc(a.name||'équipe extérieure')}">
+       <div class="league">${l.logo?logo(l.logo,l.name):''}<span>${esc(l.name||'Compétition inconnue')}${l.round?' · '+esc(l.round):''}</span></div>
+       <div class="teams"><div class="team">${logo(h.logo,h.name)}<span class="teamname">${esc(h.name||'Équipe domicile')}</span></div><div class="vs">VS</div><div class="team">${logo(a.logo,a.name)}<span class="teamname">${esc(a.name||'Équipe extérieure')}</span></div></div>
+       ${score}<div class="matchbottom"><span>${esc(formatDate(f.date))}</span><span class="badge">${esc(matchStatus(f))}</span></div>
+     </button>`;
+   }).join('');
+   matches.querySelectorAll('[data-fixture-index]').forEach(card=>card.addEventListener('click',()=>openFixture(currentFixtures[Number(card.dataset.fixtureIndex)])));
+ }
+ function openFixture(item){selectedFixture=item;currentTab='resume';$('detailModal').classList.add('open');document.body.style.overflow='hidden';$('detailTitle').textContent=`${item.teams?.home?.name||'Équipe domicile'} vs ${item.teams?.away?.name||'Équipe extérieure'}`;
+ const f=item.fixture||{},l=item.league||{},t=item.teams||{},g=item.goals||{},h=t.home||{},a=t.away||{};
+ const hasScore=(g.home!==null&&g.home!==undefined)||(g.away!==null&&g.away!==undefined);
+ $('detailBody').innerHTML=`<div class="detailteams"><div class="detailteam">${logo(h.logo,h.name)}<strong>${esc(h.name||'Équipe domicile')}</strong>${h.winner===true?'<span class="badge">Vainqueur</span>':''}</div><div class="detailteam">${logo(a.logo,a.name)}<strong>${esc(a.name||'Équipe extérieure')}</strong>${a.winner===true?'<span class="badge">Vainqueur</span>':''}</div></div>${hasScore?`<div class="score" style="font-size:32px">${esc(g.home??'-')} – ${esc(g.away??'-')}</div>`:''}<div class="sub" style="text-align:center;margin-bottom:14px">${esc(l.name||'Compétition inconnue')} · ${esc(formatDate(f.date))}</div>`;
+ document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===currentTab));renderTab();}
+ function renderTab(){if(!selectedFixture)return;const item=selectedFixture,f=item.fixture||{},l=item.league||{},t=item.teams||{},g=item.goals||{},s=f.status||{},v=item.score||{};
+ if(currentTab==='resume')$('tabContent').innerHTML=`<div class="detailgrid"><div class="detailitem"><span>Compétition</span><strong>${esc(l.name||'Non disponible')}</strong></div><div class="detailitem"><span>Statut</span><strong>${esc(matchStatus(f))}</strong></div><div class="detailitem"><span>Heure du match</span><strong>${esc(formatDate(f.date))}</strong></div><div class="detailitem"><span>Score actuel/final</span><strong>${(g.home!=null||g.away!=null)?esc(g.home??'-')+' – '+esc(g.away??'-'):'Pas encore disponible'}</strong></div></div><p class="small">Appuie sur les onglets ci-dessus pour voir l'analyse rapide, les statistiques disponibles et les informations du match.</p>`;
+ else if(currentTab==='analyse'){$('tabContent').innerHTML=`<h3 style="margin-top:0">Analyse rapide</h3><p>Rencontre : <strong>${esc(t.home?.name||'Domicile')}</strong> contre <strong>${esc(t.away?.name||'Extérieur')}</strong>.</p><p>Statut du match : <strong>${esc(matchStatus(f))}</strong>.</p><p>Les logos et les données de la fiche proviennent de l'API connectée. Une analyse statistique fiable nécessite aussi les statistiques récentes des équipes, leurs compositions et leurs performances à domicile/extérieur ; ces données ne sont pas fournies dans la réponse actuelle.</p><div class="notice">Cette fiche ne prédit pas un gagnant et ne garantit aucun pari. Il vaut mieux ne pas tirer de conclusion sans statistiques suffisantes.</div>`}
+ else if(currentTab==='stats'){$('tabContent').innerHTML=`<h3 style="margin-top:0">Statistiques du match</h3><div class="detailgrid"><div class="detailitem"><span>Buts domicile</span><strong>${g.home==null?'Non disponible':esc(g.home)}</strong></div><div class="detailitem"><span>Buts extérieur</span><strong>${g.away==null?'Non disponible':esc(g.away)}</strong></div><div class="detailitem"><span>Mi-temps domicile</span><strong>${v.halftime?.home==null?'Non disponible':esc(v.halftime.home)}</strong></div><div class="detailitem"><span>Mi-temps extérieur</span><strong>${v.halftime?.away==null?'Non disponible':esc(v.halftime.away)}</strong></div></div><p class="small">Tirs, possession, corners et cartons ne sont pas inclus dans la réponse actuelle du service. Ils nécessitent une route statistiques dédiée dans le Worker.</p>`}
+ else $('tabContent').innerHTML=`<div class="detailgrid"><div class="detailitem"><span>Stade</span><strong>${esc(f.venue?.name||'Non disponible')}</strong></div><div class="detailitem"><span>Ville</span><strong>${esc(f.venue?.city||'Non disponible')}</strong></div><div class="detailitem"><span>Arbitre</span><strong>${esc(f.referee||'Non disponible')}</strong></div><div class="detailitem"><span>Journée</span><strong>${esc(l.round||'Non disponible')}</strong></div><div class="detailitem"><span>Pays</span><strong>${esc(l.country||'Non disponible')}</strong></div><div class="detailitem"><span>Saison</span><strong>${esc(l.season||'Non disponible')}</strong></div></div>`;
+ }
+ $('matches').addEventListener('click',e=>{const card=e.target.closest('[data-fixture-index]');if(card)openFixture(currentFixtures[Number(card.dataset.fixtureIndex)]);});
+ document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{currentTab=b.dataset.tab;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));renderTab();}));
+ function closeModal(){$('detailModal').classList.remove('open');document.body.style.overflow='';}
+ $('closeModal').addEventListener('click',closeModal);$('detailModal').addEventListener('click',e=>{if(e.target===$('detailModal'))closeModal();});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+ async function loadMatches(){const base=$('apiBase').value.trim().replace(/\/+$/,'');if(!base){status.textContent='Ouvre Paramètres de connexion et ajoute l’adresse de ton Worker Cloudflare.';return;}if(!dateInput.value){status.textContent='Choisis une date.';return;}
+ $('loadBtn').disabled=true;status.textContent='Chargement des matchs…';matches.innerHTML='<div class="empty">Recherche des rencontres…</div>';
+ try{const params=new URLSearchParams({date:dateInput.value});if(leagueInput.value)params.set('league',leagueInput.value);const response=await fetch(`${base}/fixtures?${params.toString()}`);const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||`Erreur HTTP ${response.status}`);if(data.errors&&Object.keys(data.errors).length)throw new Error(JSON.stringify(data.errors));const list=Array.isArray(data.response)?data.response:(Array.isArray(data.fixtures)?data.fixtures:[]);renderFixtures(list);status.textContent=`${list.length} match(s) reçu(s) pour le ${dateInput.value}. Appuie sur une carte pour ouvrir les détails.`;}catch(err){status
